@@ -12,4 +12,8 @@ export default {
   ADMIN_EMAIL: String(process.env.ADMIN_EMAIL),
   ADMIN_PHONE: String(process.env.ADMIN_PHONE),
   ADMIN_PASSWORD: String(process.env.ADMIN_PASSWORD),
+  ACCESS_SECRET: String(process.env.ACCESS_TOKEN_SECRET),
+  ACCESS_TIME: String(process.env.ACCESS_TOKEN_TIME),
+  REFRESH_SECRET: String(process.env.REFRESH_TOKEN_SECRET),
+  REFRESH_TIME: String(process.env.REFRESH_TOKEN_TIME),
 };
