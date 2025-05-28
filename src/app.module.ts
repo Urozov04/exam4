@@ -5,6 +5,7 @@ import config from './config';
 import { Product } from './products/models/product.models';
 import { CartModule } from './cart/cart.module';
 import { OrderItemModule } from './order-item/order-item.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { OrderItemModule } from './order-item/order-item.module';
     ProductsModule,
     CartModule,
     OrderItemModule,
+    UserModule,
   ],
 })
 export class AppModule {}
