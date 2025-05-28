@@ -6,6 +6,8 @@ import { Product } from './products/models/product.models';
 import { CartModule } from './cart/cart.module';
 import { OrderItemModule } from './order-item/order-item.module';
 import { UserModule } from './user/user.module';
+import { Order } from './order/models/order.model';
+import { Review } from './review/models/review.entity';
 
 @Module({
   imports: [
@@ -19,7 +21,7 @@ import { UserModule } from './user/user.module';
       synchronize: true,
       logging: false,
       autoLoadModels: true,
-      models: [Product],
+      models: [Product,Order,Review],
     }),
     ProductsModule,
     CartModule,
