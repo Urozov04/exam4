@@ -31,7 +31,6 @@ export class User extends Model {
 
   @Column({
     type: DataType.STRING,
-    allowNull: false,
   })
   address: string;
 

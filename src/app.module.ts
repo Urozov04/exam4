@@ -8,6 +8,8 @@ import { OrderItemModule } from './order-item/order-item.module';
 import { UserModule } from './user/user.module';
 import { Order } from './order/models/order.model';
 import { Review } from './review/models/review.entity';
+import { User } from './user/model/user.model';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -21,7 +23,10 @@ import { Review } from './review/models/review.entity';
       synchronize: true,
       logging: false,
       autoLoadModels: true,
-      models: [Product,Order,Review],
+      models: [Product, Order, Review, User],
+    }),
+    JwtModule.register({
+      global: true,
     }),
     ProductsModule,
     CartModule,
