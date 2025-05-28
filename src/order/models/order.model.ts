@@ -1,4 +1,5 @@
 import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { OrderStatus, PaymentTypes } from "src/constants";
 
 @Table({tableName:'orders'})
 export class Order extends Model {
@@ -21,13 +22,13 @@ export class Order extends Model {
     address:string
 
     @Column({
-        type:DataType.STRING,
+        type:DataType.ENUM(...Object.values(PaymentTypes)),
         allowNull:false
     })
     paymentType:string
 
     @Column({
-        type:DataType.STRING,
+        type:DataType.ENUM(...Object.values(OrderStatus)),
         allowNull:false
     })
     status:string
