@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -13,19 +13,19 @@ export class ProductsService {
 
   async create(createProductDto: CreateProductDto){
     try {
-      const { name, price, quantity } = createProductDto;
-      const notProduct = await this.model.findOne({where: {name}})
-      if(!notProduct) {
-        throw new NotFoundException ('Product not found')
+      const { name } = createProductDto;
+      const product = await this.model.findOne({where: {name}})
+      if(product) {
+        throw new ConflictException ('Product already exists')
       };
-      const product = await this.model.create({
+      const newProduct = await this.model.create({
         ...createProductDto,
 
       })
       return {
         statusCode: 201,
         message: "Product created successfully",
-        data: product
+        data: newProduct
       }
     } catch (error) {
       throw new InternalServerErrorException(error.message)
