@@ -29,4 +29,10 @@ export class Product extends Model {
         allowNull: false,
     })
     quantity: number
+
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false
+    })
+    categoryId: number
 }
