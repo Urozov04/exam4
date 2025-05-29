@@ -18,6 +18,8 @@ import { SignInDto } from './dto/signInDto';
 import { TokenService } from 'src/utils/generate-token';
 import { Response } from 'express';
 import { writeToCookie } from 'src/utils/writeToCookie';
+import { CreateSellerDto } from './dto/create-seller.dto';
+import { SignUpDto } from './dto/sign-up.dto';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -71,7 +73,7 @@ export class UserService implements OnModuleInit {
     }
   }
 
-  async signInAdmin(signInDto: SignInDto, res: Response): Promise<Object> {
+  async signIn(signInDto: SignInDto, res: Response): Promise<Object> {
     try {
       const { email, password } = signInDto;
       const user = await this.UserModel.findOne({ where: { email } });
@@ -104,8 +106,71 @@ export class UserService implements OnModuleInit {
     }
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async createSeller(createSellerDto: CreateSellerDto): Promise<Object> {
+    try {
+      const { email, phoneNumber, password } = createSellerDto;
+      const seller = await this.UserModel.findOne({ where: { email } });
+      const sellerByPhone = await this.UserModel.findOne({
+        where: { phoneNumber },
+      });
+
+      if (seller) {
+        throw new ConflictException('User with this email already exist');
+      }
+      if (sellerByPhone) {
+        throw new ConflictException('User with this phone already exist');
+      }
+
+      const hashedPassword = await encrypt(password);
+
+      const newSeller = await this.UserModel.create({
+        ...createSellerDto,
+        role: UserRoles.SELLER,
+        status: UserStatus.ACTIVE,
+        password: hashedPassword,
+      });
+
+      return sucResponse('New seller created', newSeller);
+    } catch (error) {
+      return catchError(error);
+    }
+  }
+
+  async signUp(signUpDto: SignUpDto): Promise<object> {
+    try {
+      const { email, phoneNumber, password } = signUpDto;
+      const user = await this.UserModel.findOne({ where: { email } });
+      const existPhone = await this.UserModel.findOne({
+        where: { phoneNumber },
+      });
+      if (user) {
+        throw new ConflictException('User with this email already exist!');
+      }
+      if (existPhone) {
+        throw new ConflictException(
+          'User with this phone number already exist',
+        );
+      }
+      const hashedPassword = await encrypt(password);
+      const newUser = await this.UserModel.create({
+        ...signUpDto,
+        role: UserRoles.CUSTOMER,
+        password: hashedPassword,
+      });
+
+      return sucResponse('Signed up successfully', newUser);
+    } catch (error) {
+      return catchError(error);
+    }
+  }
+
+  async findAll() {
+    try {
+      const allUsers = await this.UserModel.findAll();
+      return sucResponse('All users', allUsers);
+    } catch (error) {
+      return catchError(error);
+    }
   }
 
   findOne(id: number) {
