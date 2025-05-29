@@ -3,8 +3,13 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { ProductsModule } from './products/products.module';
 import config from './config';
 import { Product } from './products/models/product.models';
-import { CategoriesModule } from './categories/categories.module';
-import { Category } from './categories/models/category.models';
+import { CartModule } from './cart/cart.module';
+import { OrderItemModule } from './order-item/order-item.module';
+import { UserModule } from './user/user.module';
+import { Order } from './order/models/order.model';
+import { Review } from './review/models/review.entity';
+import { User } from './user/model/user.model';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -18,10 +23,15 @@ import { Category } from './categories/models/category.models';
       synchronize: true,
       logging: false,
       autoLoadModels: true,
-      models: [Product, Category],
+      models: [Product, Order, Review, User],
+    }),
+    JwtModule.register({
+      global: true,
     }),
     ProductsModule,
-    CategoriesModule,
+    CartModule,
+    OrderItemModule,
+    UserModule,
   ],
 })
 export class AppModule {}
