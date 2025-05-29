@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { Order } from './models/order.entity';
+import { Order } from './models/order.model';
 
 @Injectable()
 export class OrderService {
@@ -10,24 +10,28 @@ export class OrderService {
     @InjectModel(Order) private model:typeof Order
   ){}
 
-  async create(createOrderDto: CreateOrderDto) {
+  async create(createOrderDto: CreateOrderDto){
     const order=await this.model.create({...createOrderDto})
     return order
   }
 
-  findAll() {
-    return `This action returns all order`;
+  async findAll() {
+    const order=await this.model.findAll({include:{model:Order}})
+    return order
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
+  async findById(id: number) {
+    const order=await this.model.findByPk(id,{include:{model:Order}})
+    return order
   }
 
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
+  async update(id: number, updateOrderDto: UpdateOrderDto) {
+    const order=await this.model.update(updateOrderDto,{where:{id},returning:true})
+    return order [1][0]
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
+  async remove(id: number) {
+    await this.model.destroy({where:{id}})
+    return {data:{}}  
   }
 }
