@@ -3,6 +3,8 @@ import { CreateOrderItemDto } from './dto/create-order-item.dto';
 import { UpdateOrderItemDto } from './dto/update-order-item.dto';
 import { OrderItem } from './models/order-item.models';
 import { InjectModel } from '@nestjs/sequelize';
+import { sucResponse } from 'src/utils/success-response';
+import { catchError } from 'src/utils/catch-error';
 
 @Injectable()
 export class OrderItemService {
@@ -13,52 +15,36 @@ export class OrderItemService {
   async create(createOrderItemDto: CreateOrderItemDto) {
     try {
       const orderItem = await this.model.create({...createOrderItemDto});
-      return({
-        statusCode: 201,
-        message: 'success',
-        data: {orderItem}
-      })
+      return sucResponse('New Order creater',orderItem)
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 
   async findAll() {
     try {
       const orderItem = this.model.findAll()
-      return({
-        statusCode: 200,
-        message: 'success',
-        data: {orderItem}
-      })
+      return sucResponse('All Order',orderItem)
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 
   async findOne(id: number) {
     try {
       const orderItem = await this.model.findByPk(id)
-      return({
-        statusCode: 200,
-        message: 'success',
-        data: {orderItem}
-      })
+      return sucResponse('OrderItem by elemenent',orderItem)
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 
   async update(id: number, updateOrderItemDto: UpdateOrderItemDto) {
     try {
       const orderItem = await this.model.update(updateOrderItemDto,{where: {id}});
-      return({
-        statusCode: 200,
-        message: 'success',
-        data: {orderItem}
-      })
+      return sucResponse('OrderItem update',orderItem)
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 
@@ -69,7 +55,7 @@ export class OrderItemService {
         data: {}
       })
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 }
