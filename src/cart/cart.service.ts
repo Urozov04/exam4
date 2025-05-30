@@ -26,7 +26,7 @@ export class CartService {
 
   async findAll() {
     try {
-      const cart = this.model.findAll()
+      const cart = await this.model.findAll()
       return({
         statusCode: 200,
         message: 'success',

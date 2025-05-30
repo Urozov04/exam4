@@ -3,32 +3,31 @@ import { Column, DataType, Model, Table } from "sequelize-typescript";
 @Table ({tableName: 'order-item'})
 export class OrderItem extends Model {
     @Column({
-        type: DataType.STRING,
+        type: DataType.INTEGER,
         allowNull: false,
     })
-    productId: String
+    productId: number
     
     @Column({
-        type: DataType.BIGINT,
+        type: DataType.INTEGER,
         allowNull: false,
     })
-    quantity: Number
+    quantity: number
 
     @Column({
         type: DataType.BIGINT,
         allowNull: false,
     })
-    totalPrice: Number
+    totalPrice: number
 
     @Column({
-        type: DataType.BIGINT,
+        type: DataType.INTEGER,
         allowNull: false,
     })
-    orderId: Number
+    orderId: number
 
     @Column({
-        type: DataType.BIGINT,
-        allowNull: false,
+        type: DataType.INTEGER,
     })
-    cartId: Number
+    cartId: number
 }
