@@ -3,6 +3,8 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Order } from './models/order.model';
+import { catchError } from 'src/utils/catch-error';
+import { sucResponse } from 'src/utils/success-response';
 
 @Injectable()
 export class OrderService {
@@ -11,27 +13,47 @@ export class OrderService {
   ){}
 
   async create(createOrderDto: CreateOrderDto){
-    const order=await this.model.create({...createOrderDto})
-    return order
+    try {
+      const order=await this.model.create({...createOrderDto})
+      return sucResponse('New Order creater',order)
+    } catch (error) {
+      return catchError(error)
+    }
   }
 
   async findAll() {
-    const order=await this.model.findAll({include:{model:Order}})
-    return order
+    try {
+      const order=await this.model.findAll()
+      return sucResponse('All Order',order)
+    } catch (error) {
+      return catchError(error)
+    }
   }
 
   async findById(id: number) {
-    const order=await this.model.findByPk(id,{include:{model:Order}})
-    return order
+    try {
+      const order=await this.model.findByPk(id);
+      return sucResponse(`Order by element`, order)
+    } catch (error) {
+      return catchError(error)
+    }
   }
 
   async update(id: number, updateOrderDto: UpdateOrderDto) {
-    const order=await this.model.update(updateOrderDto,{where:{id},returning:true})
-    return order [1][0]
+    try {
+      const order=await this.model.update(updateOrderDto,{where:{id},returning:true})
+      return sucResponse(`Order update by id`, order)
+    } catch (error) {
+      return catchError(error)
+    }
   }
 
   async remove(id: number) {
-    await this.model.destroy({where:{id}})
-    return {data:{}}  
+    try {
+      await this.model.destroy({where:{id}})
+      return {data:{}}
+    } catch (error) {
+      return catchError(error)
+    }  
   }
 }

@@ -3,6 +3,8 @@ import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Review } from './models/review.entity';
+import { sucResponse } from 'src/utils/success-response';
+import { catchError } from 'src/utils/catch-error';
 
 @Injectable()
 export class ReviewService {
@@ -11,27 +13,47 @@ export class ReviewService {
   ){}
 
   async create(createReviewDto: CreateReviewDto){
-    const review=await this.model.create({...createReviewDto})
-    return review
+    try {
+      const review=await this.model.create({...createReviewDto})
+      return sucResponse('New Review creater',review)
+    } catch (error) {
+      return catchError(error)
+    }
   }
 
   async findAll() {
-    const review=await this.model.findAll({include:{model:Review}})
-    return review
+    try {
+      const review=await this.model.findAll()
+      return sucResponse('All Review',review)
+    } catch (error) {
+      return catchError(error)
+    }
   }
 
   async findById(id: number) {
-    const review=await this.model.findByPk(id,{include:{model:Review}})
-    return review
+    try {
+      const review=await this.model.findByPk(id);
+      return sucResponse(`Review by element`, review)
+    } catch (error) {
+      return catchError(error)
+    }
   }
 
   async update(id: number, updateReviewDto: UpdateReviewDto) {
-    const review=await this.model.update(updateReviewDto,{where:{id},returning:true})
-    return review [1][0]
+    try {
+      const review=await this.model.update(updateReviewDto,{where:{id},returning:true})
+      return sucResponse(`Review update by id`, review)
+    } catch (error) {
+      return catchError(error)
+    }
   }
 
   async remove(id: number) {
-    await this.model.destroy({where:{id}})
-    return {data:{}}  
+    try {
+      await this.model.destroy({where:{id}})
+      return {data:{}}
+    } catch (error) {
+      return catchError(error)
+    }  
   }
 }

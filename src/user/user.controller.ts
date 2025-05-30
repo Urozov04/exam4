@@ -13,6 +13,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { SignInDto } from './dto/signInDto';
 import { Response } from 'express';
+import { CreateSellerDto } from './dto/create-seller.dto';
+import { SignUpDto } from './dto/sign-up.dto';
 
 @Controller('user')
 export class UserController {
@@ -23,12 +25,22 @@ export class UserController {
     return this.userService.createAdmin(createUserDto);
   }
 
+  @Post('seller')
+  createSeller(@Body() createSellerDto: CreateSellerDto) {
+    return this.userService.createSeller(createSellerDto);
+  }
+
+  @Post('sign-up')
+  signUp(@Body() signUpDto: SignUpDto) {
+    return this.userService.signUp(signUpDto);
+  }
+
   @Post('login')
   login(
     @Body() signInDto: SignInDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return this.userService.signInAdmin(signInDto, res);
+    return this.userService.signIn(signInDto, res);
   }
 
   @Get()
