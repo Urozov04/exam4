@@ -7,7 +7,13 @@ export class Order extends Model {
         type:DataType.DECIMAL,
         allowNull:false,
     })
-    totalPrice:number
+    customerId:number
+
+    @Column({
+        type:DataType.DECIMAL,
+        allowNull:false,
+    })
+    totalPrice: number
 
     @Column({
         type:DataType.STRING,
@@ -32,12 +38,4 @@ export class Order extends Model {
         allowNull:false
     })
     status:string
-
-    // @ForeignKey(()=>UserId)
-    // @Column({
-    //     type:DataType.INTEGER,
-    //     allowNull:false
-    // })
-    // userId:number
-
 }
