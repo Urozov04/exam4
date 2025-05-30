@@ -48,10 +48,12 @@ export class ReviewService {
     }
   }
 
-  async remove(id: number) {
+  async delete(id: number) {
     try {
       await this.model.destroy({where:{id}})
-      return {data:{}}
+      return ({
+        data: {}
+      })
     } catch (error) {
       return catchError(error)
     }  

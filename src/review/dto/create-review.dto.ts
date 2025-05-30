@@ -12,7 +12,7 @@ export class CreateReviewDto {
     rating:string
 
     @ApiProperty({
-        description:"yaxshi mahsulot",
+        description:"yahshi mahsulot",
         example:"ajoyib mahsulot",
         required:true
     })

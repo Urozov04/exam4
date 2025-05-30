@@ -1,8 +1,10 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateCartDto } from './dto/create-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { Cart } from './models/cart.model';
 import { InjectModel } from '@nestjs/sequelize';
+import { catchError } from 'src/utils/catch-error';
+import { sucResponse } from 'src/utils/success-response';
 
 @Injectable()
 export class CartService {
@@ -14,52 +16,36 @@ export class CartService {
   async create(createCartDto: CreateCartDto) {
     try {
       const cart = await this.model.create({...createCartDto});
-      return({
-        statusCode: 201,
-        message: 'success',
-        data: {cart}
-      })
+      return sucResponse('Cart created', cart)
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 
   async findAll() {
     try {
       const cart = this.model.findAll()
-      return({
-        statusCode: 200,
-        message: 'success',
-        data: {cart}
-      })
+      return sucResponse('Cart Finded', cart)
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 
   async findOne(id: number) {
     try {
       const cart = await this.model.findByPk(id)
-      return({
-        statusCode: 200,
-        message: 'success',
-        data: {cart}
-      })
+      return sucResponse('Cart FindedById', cart)
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 
   async update(id: number, updateCartDto: UpdateCartDto) {
     try {
       const cart = await this.model.update(updateCartDto, {where: {id}});
-      return({
-        statusCode: 200,
-        message: 'success',
-        data: {cart}
-      })
+      return sucResponse('Cart updated', cart)
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 
@@ -70,7 +56,7 @@ export class CartService {
         data: {}
       })
     } catch (error) {
-      throw new InternalServerErrorException(error.message)
+      return catchError(error)
     }
   }
 }
