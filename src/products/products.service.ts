@@ -22,7 +22,7 @@ export class ProductsService {
         throw new ConflictException ('Product already exists')
       };
       const newProduct = await this.model.create({
-        ...createProductDto,
+        ...createProductDto, name: lower
 
       })
       return sucResponse("Product created successfully", newProduct)
@@ -64,7 +64,7 @@ export class ProductsService {
       }
       const existProduct = await this.model.findOne({where: {name}})
       if(existProduct) {
-        throw new ConflictException("This category already exists")
+        throw new ConflictException("This product already exists")
       }
       const product = await this.model.update({...updateProductDto, name}, {where: {id}, returning: true})
       return sucResponse("success", product)
@@ -82,7 +82,7 @@ export class ProductsService {
       await this.model.destroy({where: {id}})
       return sucResponse("Product deleted", {})
     } catch (error) {
-      
+      return catchError(error);
     }
   }
 }
