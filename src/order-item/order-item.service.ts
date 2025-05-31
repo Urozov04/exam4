@@ -5,57 +5,26 @@ import { OrderItem } from './models/order-item.models';
 import { InjectModel } from '@nestjs/sequelize';
 import { sucResponse } from 'src/utils/success-response';
 import { catchError } from 'src/utils/catch-error';
+import { Sequelize } from 'sequelize-typescript';
+import { Order } from 'src/order/models/order.model';
+import { Request } from 'express';
 
 @Injectable()
 export class OrderItemService {
   constructor(
-    @InjectModel (OrderItem) private model: typeof OrderItem
+    @InjectModel(OrderItem) private orderItem: typeof OrderItem,
+    @InjectModel(Order) private order: typeof Order,
+    private readonly sequelize: Sequelize,
   ) {}
-  
+
   async create(createOrderItemDto: CreateOrderItemDto) {
+    const transaction = this.sequelize.transaction();
     try {
-      const orderItem = await this.model.create({...createOrderItemDto});
-      return sucResponse('New Order creater',orderItem)
+      const order = await this.order.create({});
+      const orderItem = await this.orderItem.create();
+      return sucResponse('New Order creater', orderItem);
     } catch (error) {
-      return catchError(error)
-    }
-  }
-
-  async findAll() {
-    try {
-      const orderItem = this.model.findAll()
-      return sucResponse('All Order',orderItem)
-    } catch (error) {
-      return catchError(error)
-    }
-  }
-
-  async findOne(id: number) {
-    try {
-      const orderItem = await this.model.findByPk(id)
-      return sucResponse('OrderItem by elemenent',orderItem)
-    } catch (error) {
-      return catchError(error)
-    }
-  }
-
-  async update(id: number, updateOrderItemDto: UpdateOrderItemDto) {
-    try {
-      const orderItem = await this.model.update(updateOrderItemDto,{where: {id}});
-      return sucResponse('OrderItem update',orderItem)
-    } catch (error) {
-      return catchError(error)
-    }
-  }
-
-  async delete(id: number) {
-    try {
-      await this.model.destroy({where: {id}})
-      return ({
-        data: {}
-      })
-    } catch (error) {
-      return catchError(error)
+      return catchError(error);
     }
   }
 }

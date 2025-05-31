@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   OnModuleInit,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -164,7 +165,7 @@ export class UserService implements OnModuleInit {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<object> {
     try {
       const allUsers = await this.UserModel.findAll();
       return sucResponse('All users', allUsers);
@@ -173,8 +174,16 @@ export class UserService implements OnModuleInit {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<object> {
+    try {
+      const user = await this.UserModel.findByPk(id);
+      if (!user) {
+        throw new NotFoundException('User with this id is not exist');
+      }
+      return sucResponse('User by id', user);
+    } catch (error) {
+      return catchError(error);
+    }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
