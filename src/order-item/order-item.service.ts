@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Inject, Injectable, Scope } from '@nestjs/common';
 import { CreateOrderItemDto } from './dto/create-order-item.dto';
 import { UpdateOrderItemDto } from './dto/update-order-item.dto';
 import { OrderItem } from './models/order-item.models';
@@ -7,9 +7,9 @@ import { sucResponse } from 'src/utils/success-response';
 import { catchError } from 'src/utils/catch-error';
 import { Sequelize } from 'sequelize-typescript';
 import { Order } from 'src/order/models/order.model';
-import { Request } from 'express';
+import { REQUEST } from '@nestjs/core';
 
-@Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class OrderItemService {
   constructor(
     @InjectModel(OrderItem) private orderItem: typeof OrderItem,
@@ -17,9 +17,11 @@ export class OrderItemService {
     private readonly sequelize: Sequelize,
   ) {}
 
-  async create(createOrderItemDto: CreateOrderItemDto) {
+  async create(user: any, data: CreateOrderItemDto) {
     const transaction = this.sequelize.transaction();
     try {
+      const reqUser = user;
+      return reqUser;
       const order = await this.order.create({});
       const orderItem = await this.orderItem.create();
       return sucResponse('New Order creater', orderItem);

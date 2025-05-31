@@ -4,10 +4,11 @@ import { OrderItemController } from './order-item.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { OrderItem } from './models/order-item.models';
 import { Order } from 'src/order/models/order.model';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Module({
   imports: [SequelizeModule.forFeature([OrderItem, Order])],
   controllers: [OrderItemController],
-  providers: [OrderItemService],
+  providers: [OrderItemService, AuthGuard],
 })
 export class OrderItemModule {}

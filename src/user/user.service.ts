@@ -21,6 +21,7 @@ import { Response } from 'express';
 import { writeToCookie } from 'src/utils/writeToCookie';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { SignUpDto } from './dto/sign-up.dto';
+import { AuthUser } from 'src/helpers/user.types';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -90,7 +91,7 @@ export class UserService implements OnModuleInit {
         throw new BadRequestException('Email or password wrong!');
       }
 
-      const payload = {
+      const payload: AuthUser = {
         id: user.dataValues.id,
         name: user.dataValues.fullName,
         role: user.dataValues.role,
