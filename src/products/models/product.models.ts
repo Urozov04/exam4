@@ -35,4 +35,14 @@ export class Product extends Model {
         allowNull: false
     })
     categoryId: number
+
+    @Column({
+        type: DataType.INTEGER,
+    })
+    sellerId: number
+
+    @Column ({
+        type: DataType.INTEGER
+    })
+    rating: number
 }

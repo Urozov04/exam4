@@ -1,4 +1,4 @@
-import { IsDecimal, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsDecimal, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 
 export class CreateProductDto {
@@ -18,6 +18,14 @@ export class CreateProductDto {
 
     @IsNotEmpty()
     @IsNumber()
-    quantity: number;
+    quantity: number;    
+
+    @IsNumber()
+    @IsNotEmpty()
+    categoryId: number
+
+    @IsOptional()
+    @IsNumber()
+    sellerId: number
 
 }

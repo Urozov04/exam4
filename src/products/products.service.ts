@@ -3,6 +3,8 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Product } from './models/product.models';
+import { sucResponse } from 'src/utils/success-response';
+import { catchError } from 'src/utils/catch-error';
 
 @Injectable()
 export class ProductsService {
@@ -14,37 +16,73 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto){
     try {
       const { name } = createProductDto;
-      const product = await this.model.findOne({where: {name}})
-      if(product) {
+      const lower = String(name).toLowerCase()
+      const existProduct = await this.model.findOne({where: {name: lower}})
+      if(existProduct) {
         throw new ConflictException ('Product already exists')
       };
       const newProduct = await this.model.create({
         ...createProductDto,
 
       })
-      return {
-        statusCode: 201,
-        message: "Product created successfully",
-        data: newProduct
-      }
+      return sucResponse("Product created successfully", newProduct)
     } catch (error) {
       throw new InternalServerErrorException(error.message)
     }
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async findAll() {
+    try {
+      const products = await this.model.findAll()
+      return sucResponse("success", products)
+    } catch (error) {
+      return catchError(error)
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: number) {
+    try {
+      const product = await this.model.findByPk(id)
+      if(!product) {
+        throw new NotFoundException(`Product not found which that id ${id}`)
+      }
+      return sucResponse("success", product)
+    } catch (error) {
+      return catchError(error);
+    }
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    try {
+      const productById = await this.model.findByPk(id)
+      if(!productById) {
+        throw new NotFoundException("Not found")
+      }
+      let { name } = updateProductDto;
+      if(name) {
+        name = String(name).toLowerCase()
+      }
+      const existProduct = await this.model.findOne({where: {name}})
+      if(existProduct) {
+        throw new ConflictException("This category already exists")
+      }
+      const product = await this.model.update({...updateProductDto, name}, {where: {id}, returning: true})
+      return sucResponse("success", product)
+    } catch (error) {
+      return catchError(error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async delete(id: number) {
+    try {
+      const product = await this.model.findByPk(id)
+      if(!product) {
+        throw new NotFoundException(`Product not found which that id ${id}`)
+      }
+      await this.model.destroy({where: {id}})
+      return sucResponse("Product deleted", {})
+    } catch (error) {
+      
+    }
   }
 }
