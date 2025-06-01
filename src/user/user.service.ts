@@ -96,6 +96,7 @@ export class UserService implements OnModuleInit {
         name: user.dataValues.fullName,
         role: user.dataValues.role,
         status: user.dataValues.status,
+        address: user.dataValues.address,
       };
 
       const accessToken = await this.token.generateAccessToken(payload);
