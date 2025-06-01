@@ -5,9 +5,11 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { OrderItem } from './models/order-item.models';
 import { Order } from 'src/order/models/order.model';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { Cart } from 'src/cart/models/cart.model';
+import { Product } from 'src/products/models/product.models';
 
 @Module({
-  imports: [SequelizeModule.forFeature([OrderItem, Order])],
+  imports: [SequelizeModule.forFeature([OrderItem, Order, Cart, Product])],
   controllers: [OrderItemController],
   providers: [OrderItemService, AuthGuard],
 })

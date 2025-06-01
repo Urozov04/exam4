@@ -29,4 +29,10 @@ export class OrderItemController {
   ) {
     return this.orderItemService.create(user, data);
   }
+
+  @UseGuards(AuthGuard)
+  @Get()
+  async findAll() {
+    return this.orderItemService.getAll();
+  }
 }

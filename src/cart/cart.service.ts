@@ -12,6 +12,8 @@ export class CartService {
 
   async create(createCartDto: CreateCartDto) {
     try {
+      console.log(createCartDto);
+
       const cart = await this.model.create({ ...createCartDto });
       return sucResponse('Cart created', cart);
     } catch (error) {
