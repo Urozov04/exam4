@@ -12,9 +12,7 @@ import {
 import { OrderItemService } from './order-item.service';
 import { CreateOrderItemDto } from './dto/create-order-item.dto';
 import { UpdateOrderItemDto } from './dto/update-order-item.dto';
-import { User } from 'src/user/model/user.model';
 import { UserDecorator } from 'src/decorators/user.decorator';
-import { AuthUser } from 'src/helpers/user.types';
 import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('order-item')

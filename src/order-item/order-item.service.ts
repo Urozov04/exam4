@@ -13,7 +13,6 @@ import { sucResponse } from 'src/utils/success-response';
 import { catchError } from 'src/utils/catch-error';
 import { Sequelize } from 'sequelize-typescript';
 import { Order } from 'src/order/models/order.model';
-import { REQUEST } from '@nestjs/core';
 import { Cart } from 'src/cart/models/cart.model';
 import { Product } from 'src/products/models/product.models';
 
@@ -31,7 +30,6 @@ export class OrderItemService {
     const transaction = await this.sequelize.transaction();
     try {
       const { id, address } = user;
-
       const allActiveCarts = await this.cart.findAll({
         where: { userId: String(id) },
         transaction,
