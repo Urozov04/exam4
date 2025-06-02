@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from "sequelize-typescript"
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript"
+import { Category } from "src/categories/models/category.models"
 
 @Table ({tableName: 'products'})
 export class Product extends Model {
@@ -29,13 +30,7 @@ export class Product extends Model {
         allowNull: false,
     })
     quantity: number
-
-    @Column({
-        type: DataType.INTEGER,
-        allowNull: false
-    })
-    categoryId: number
-
+    
     // @Column({
     //     type: DataType.INTEGER,
     // })
@@ -45,4 +40,17 @@ export class Product extends Model {
         type: DataType.INTEGER
     })
     rating: number
+
+    @ForeignKey(() => Category)
+    @Column({
+        type: DataType.INTEGER,
+        allowNull: false
+    })
+    categoryId: number
+
+    @BelongsTo(() => Category, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE"
+    })
+    category: Category;
 }

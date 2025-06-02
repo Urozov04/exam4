@@ -38,7 +38,7 @@ export class ProductsService {
 
   async findAll() {
     try {
-      const products = await this.model.findAll();
+      const products = await this.model.findAll({where: {include: true}});
       return sucResponse('success', products);
     } catch (error) {
       return catchError(error);
