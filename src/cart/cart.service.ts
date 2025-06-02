@@ -9,11 +9,8 @@ import { sucResponse } from 'src/utils/success-response';
 @Injectable()
 export class CartService {
   constructor(@InjectModel(Cart) private model: typeof Cart) {}
-
   async create(createCartDto: CreateCartDto) {
     try {
-      console.log(createCartDto);
-
       const cart = await this.model.create({ ...createCartDto });
       return sucResponse('Cart created', cart);
     } catch (error) {
