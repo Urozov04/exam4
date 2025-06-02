@@ -36,10 +36,10 @@ export class Product extends Model {
     })
     categoryId: number
 
-    @Column({
-        type: DataType.INTEGER,
-    })
-    sellerId: number
+    // @Column({
+    //     type: DataType.INTEGER,
+    // })
+    // sellerId: number
 
     @Column ({
         type: DataType.INTEGER
