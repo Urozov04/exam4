@@ -13,16 +13,17 @@ export class ProductsService {
     @InjectModel (Product) private model: typeof Product
   ) {}
 
-  async create(createProductDto: CreateProductDto){
+  async create(user: any, createProductDto: CreateProductDto){
     try {
+      const { id } = user;
       const { name } = createProductDto;
       const lower = String(name).toLowerCase()
-      const existProduct = await this.model.findOne({where: {name: lower}})
+      const existProduct = await this.model.findOne({where: {name: lower }})
       if(existProduct) {
         throw new ConflictException ('Product already exists')
       };
       const newProduct = await this.model.create({
-        ...createProductDto, name: lower
+        ...createProductDto, name: lower, sellerId: id
 
       })
       return sucResponse("Product created successfully", newProduct)
