@@ -29,7 +29,7 @@ export class OrderItemService {
   async create(user: any, data: CreateOrderItemDto): Promise<object> {
     const transaction = await this.sequelize.transaction();
     try {
-      const { id, address } = user;
+      const { id } = user;
       const allActiveCarts = await this.cart.findAll({
         where: { userId: String(id) },
         transaction,
@@ -45,13 +45,11 @@ export class OrderItemService {
           customerId: id,
           totalPrice: orderTotalPrice,
           totalProduct: orderTotalProduct,
-          address,
         },
         { transaction },
       );
       for (const cartItem of allActiveCarts) {
         console.log(cartItem);
-
         const productItem = await this.product.findOne({
           where: { id: cartItem.dataValues.productId },
           transaction,
@@ -64,14 +62,17 @@ export class OrderItemService {
         }
         productItem.quantity -= cartItem.quantity;
         await productItem.save({ transaction });
-        const newOrderItem = await this.orderItem.create({
-          orderId: newOrder.dataValues.id,
-          productId: cartItem.dataValues.productId,
-          quantity: cartItem.dataValues.quantity,
-          totalPrice:
-            Number(productItem.dataValues.price) *
-            Number(cartItem.dataValues.quantity),
-        });
+        const newOrderItem = await this.orderItem.create(
+          {
+            orderId: newOrder.dataValues.id,
+            productId: cartItem.dataValues.productId,
+            quantity: cartItem.dataValues.quantity,
+            totalPrice:
+              Number(productItem.dataValues.price) *
+              Number(cartItem.dataValues.quantity),
+          },
+          { transaction },
+        );
         await newOrder.update({
           totalPrice: (orderTotalPrice += Number(
             newOrderItem.dataValues.totalPrice,

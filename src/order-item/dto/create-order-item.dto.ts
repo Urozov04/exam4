@@ -4,4 +4,8 @@ export class CreateOrderItemDto {
   @IsString()
   @IsOptional()
   paymentType: string;
+
+  @IsString()
+  @IsOptional()
+  address: string;
 }
