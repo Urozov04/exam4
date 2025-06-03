@@ -77,5 +77,5 @@ export class Product extends Model {
   orderItem: OrderItem
 
   @HasMany(() => Cart)
-  cart: Cart
+  cart: Cart[]
 }
