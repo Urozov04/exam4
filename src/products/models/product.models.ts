@@ -74,8 +74,8 @@ export class Product extends Model {
   category: Category;
 
   @HasMany(() => OrderItem)
-  orderItem: OrderItem
+  orderItem: OrderItem;
 
   @HasMany(() => Cart)
-  cart: Cart
+  cart: Cart;
 }
