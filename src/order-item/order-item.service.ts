@@ -15,6 +15,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { Order } from 'src/order/models/order.model';
 import { Cart } from 'src/cart/models/cart.model';
 import { Product } from 'src/products/models/product.models';
+import { User } from 'src/user/model/user.model';
 
 @Injectable({ scope: Scope.REQUEST })
 export class OrderItemService {
@@ -49,7 +50,6 @@ export class OrderItemService {
         { transaction },
       );
       for (const cartItem of allActiveCarts) {
-        console.log(cartItem);
         const productItem = await this.product.findOne({
           where: { id: cartItem.dataValues.productId },
           transaction,
@@ -95,6 +95,18 @@ export class OrderItemService {
     try {
       const allOrderItems = await this.orderItem.findAll();
       return sucResponse('All order items', allOrderItems);
+    } catch (error) {
+      return catchError(error);
+    }
+  }
+
+  async getById(id: number) {
+    try {
+      const orderItem = await this.orderItem.findByPk(id, { include: [User] });
+      if (!orderItem) {
+        throw new NotFoundException('Item not found');
+      }
+      return sucResponse('Item by id', orderItem);
     } catch (error) {
       return catchError(error);
     }
