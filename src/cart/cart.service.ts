@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { catchError } from 'src/utils/catch-error';
 import { sucResponse } from 'src/utils/success-response';
 import { Product } from 'src/products/models/product.models';
+import { User } from 'src/user/model/user.model';
 
 @Injectable()
 export class CartService {
@@ -30,7 +31,7 @@ export class CartService {
 
   async findAll() {
     try {
-      const cart = await this.model.findAll();
+      const cart = await this.model.findAll({ include: [Product, User] });
       return sucResponse('Cart Finded', cart);
     } catch (error) {
       return catchError(error);
@@ -40,7 +41,11 @@ export class CartService {
   async myCart(user: any) {
     try {
       const { id } = user;
-      const allMyCarts = await this.model.findAll({ where: { userId: id } });
+      console.log(id, 'AAAAAAAAA');
+      const allMyCarts = await this.model.findAll({
+        where: { userId: id },
+        include: [Product],
+      });
       return sucResponse('My cart', allMyCarts);
     } catch (error) {
       return catchError(error);
@@ -62,11 +67,13 @@ export class CartService {
   async update(id: number, updateCartDto: UpdateCartDto) {
     try {
       const cart = await this.model.findByPk(id);
+      console.log(cart);
+
       if (!cart) {
         throw new NotFoundException('Cart not found');
       }
-      let quantity = Number(cart?.quantity);
-      quantity += Number(updateCartDto);
+      let quantity = Number(cart?.dataValues.quantity);
+      quantity += updateCartDto.quantity;
       await cart?.update({ quantity }, { returning: true });
       return sucResponse('Cart updated', cart);
     } catch (error) {
@@ -77,9 +84,7 @@ export class CartService {
   async delete(id: number) {
     try {
       await this.model.destroy({ where: { id } });
-      return {
-        data: {},
-      };
+      return sucResponse('Cart deleted', {});
     } catch (error) {
       return catchError(error);
     }

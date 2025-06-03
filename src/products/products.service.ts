@@ -10,6 +10,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Product } from './models/product.models';
 import { sucResponse } from 'src/utils/success-response';
 import { catchError } from 'src/utils/catch-error';
+import { Category } from 'src/categories/models/category.models';
 
 @Injectable()
 export class ProductsService {
@@ -37,7 +38,7 @@ export class ProductsService {
 
   async findAll() {
     try {
-      const products = await this.model.findAll({ where: { include: true } });
+      const products = await this.model.findAll({ include: [Category] });
       return sucResponse('success', products);
     } catch (error) {
       return catchError(error);

@@ -31,7 +31,7 @@ export class CartController {
   }
 
   @UseGuards(AuthGuard)
-  @Get()
+  @Get('mine')
   myCart(@UserDecorator() user: any) {
     return this.cartService.myCart(user);
   }
