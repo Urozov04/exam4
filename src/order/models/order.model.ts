@@ -15,7 +15,7 @@ import { User } from 'src/user/model/user.model';
 export class Order extends Model {
   @ForeignKey(() => User)
   @Column({
-    type: DataType.DECIMAL,
+    type: DataType.INTEGER,
     allowNull: false,
   })
   customerId: number;
