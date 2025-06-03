@@ -34,7 +34,7 @@ import { CategoriesModule } from './categories/categories.module';
     CartModule,
     OrderItemModule,
     UserModule,
-    CategoriesModule
+    CategoriesModule,
   ],
 })
 export class AppModule {}
