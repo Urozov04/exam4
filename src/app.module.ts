@@ -12,6 +12,8 @@ import { User } from './user/model/user.model';
 import { JwtModule } from '@nestjs/jwt';
 import { Category } from './categories/models/category.models';
 import { CategoriesModule } from './categories/categories.module';
+import { OrderItem } from './order-item/models/order-item.models';
+import { Cart } from './cart/models/cart.model';
 
 @Module({
   imports: [
@@ -25,7 +27,7 @@ import { CategoriesModule } from './categories/categories.module';
       synchronize: true,
       logging: false,
       autoLoadModels: true,
-      models: [Product, Order, Review, User, Category],
+      models: [Product, Order, Review, User, Category, OrderItem, Cart],
     }),
     JwtModule.register({
       global: true,
