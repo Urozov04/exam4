@@ -10,6 +10,8 @@ import { Order } from './order/models/order.model';
 import { Review } from './review/models/review.entity';
 import { User } from './user/model/user.model';
 import { JwtModule } from '@nestjs/jwt';
+import { Category } from './categories/models/category.models';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { JwtModule } from '@nestjs/jwt';
       synchronize: true,
       logging: false,
       autoLoadModels: true,
-      models: [Product, Order, Review, User],
+      models: [Product, Order, Review, User, Category],
     }),
     JwtModule.register({
       global: true,
@@ -32,6 +34,7 @@ import { JwtModule } from '@nestjs/jwt';
     CartModule,
     OrderItemModule,
     UserModule,
+    CategoriesModule,
   ],
 })
 export class AppModule {}

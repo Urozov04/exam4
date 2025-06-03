@@ -1,5 +1,9 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Table, Column, Model, DataType, HasMany } from 'sequelize-typescript';
+import { Cart } from 'src/cart/models/cart.model';
+import { Category } from 'src/categories/models/category.models';
 import { UserRoles, UserStatus } from 'src/constants';
+import { Order } from 'src/order/models/order.model';
+import { Product } from 'src/products/models/product.models';
 
 @Table({ tableName: 'users' })
 export class User extends Model {
@@ -49,4 +53,13 @@ export class User extends Model {
     type: DataType.ENUM(...Object.values(UserStatus)),
   })
   status: UserStatus;
+
+  @HasMany(() => Order)
+  order: Order[];
+
+  @HasMany(() => Product)
+  product: Product[];
+
+  @HasMany(() => Cart)
+  cart: Cart[];
 }

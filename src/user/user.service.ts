@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   OnModuleInit,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,6 +21,7 @@ import { Response } from 'express';
 import { writeToCookie } from 'src/utils/writeToCookie';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { SignUpDto } from './dto/sign-up.dto';
+import { AuthUser } from 'src/helpers/user.types';
 
 @Injectable()
 export class UserService implements OnModuleInit {
@@ -89,11 +91,12 @@ export class UserService implements OnModuleInit {
         throw new BadRequestException('Email or password wrong!');
       }
 
-      const payload = {
+      const payload: AuthUser = {
         id: user.dataValues.id,
         name: user.dataValues.fullName,
         role: user.dataValues.role,
         status: user.dataValues.status,
+        address: user.dataValues.address,
       };
 
       const accessToken = await this.token.generateAccessToken(payload);
@@ -164,7 +167,7 @@ export class UserService implements OnModuleInit {
     }
   }
 
-  async findAll() {
+  async findAll(): Promise<object> {
     try {
       const allUsers = await this.UserModel.findAll();
       return sucResponse('All users', allUsers);
@@ -173,8 +176,16 @@ export class UserService implements OnModuleInit {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number): Promise<object> {
+    try {
+      const user = await this.UserModel.findByPk(id);
+      if (!user) {
+        throw new NotFoundException('User with this id is not exist');
+      }
+      return sucResponse('User by id', user);
+    } catch (error) {
+      return catchError(error);
+    }
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

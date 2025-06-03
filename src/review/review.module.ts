@@ -5,7 +5,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Review } from './models/review.entity';
 
 @Module({
-  imports:[SequelizeModule.forFeature([Review])],
+  imports: [SequelizeModule.forFeature([Review])],
   controllers: [ReviewController],
   providers: [ReviewService],
 })
