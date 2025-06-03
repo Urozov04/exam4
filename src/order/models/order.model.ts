@@ -13,7 +13,6 @@ import { User } from 'src/user/model/user.model';
 
 @Table({ tableName: 'orders' })
 export class Order extends Model {
-
   @ForeignKey(() => User)
   @Column({
     type: DataType.DECIMAL,
@@ -60,5 +59,5 @@ export class Order extends Model {
   status: string;
 
   @HasMany(() => OrderItem)
-  orderItem: OrderItem
+  orderItem: OrderItem;
 }

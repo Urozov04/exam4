@@ -59,9 +59,15 @@ export class CartService {
     }
   }
 
-  async update(id: number) {
+  async update(id: number, updateCartDto: UpdateCartDto) {
     try {
-      const cart = await this.model.update({}, { where: { id } });
+      const cart = await this.model.findByPk(id);
+      if (!cart) {
+        throw new NotFoundException('Cart not found');
+      }
+      let quantity = Number(cart?.quantity);
+      quantity += Number(updateCartDto);
+      await cart?.update({ quantity }, { returning: true });
       return sucResponse('Cart updated', cart);
     } catch (error) {
       return catchError(error);
