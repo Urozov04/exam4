@@ -19,10 +19,10 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
   @UseGuards(AuthGuard)
   @Post()
-
   async create(
     @UserDecorator() user: any,
-    @Body() createProductDto: CreateProductDto) {
+    @Body() createProductDto: CreateProductDto,
+  ) {
     return this.productsService.create(user, createProductDto);
   }
 

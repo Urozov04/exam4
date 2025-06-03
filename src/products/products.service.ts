@@ -13,24 +13,23 @@ import { catchError } from 'src/utils/catch-error';
 
 @Injectable()
 export class ProductsService {
-  constructor(
-    @InjectModel (Product) private model: typeof Product
-  ) {}
+  constructor(@InjectModel(Product) private model: typeof Product) {}
 
-  async create(user: any, createProductDto: CreateProductDto){
+  async create(user: any, createProductDto: CreateProductDto) {
     try {
       const { id } = user;
       const { name } = createProductDto;
-      const lower = String(name).toLowerCase()
-      const existProduct = await this.model.findOne({where: {name: lower }})
-      if(existProduct) {
-        throw new ConflictException ('Product already exists')
-      };
+      const lower = String(name).toLowerCase();
+      const existProduct = await this.model.findOne({ where: { name: lower } });
+      if (existProduct) {
+        throw new ConflictException('Product already exists');
+      }
       const newProduct = await this.model.create({
-        ...createProductDto, name: lower, sellerId: id
-
-      })
-      return sucResponse("Product created successfully", newProduct)
+        ...createProductDto,
+        name: lower,
+        sellerId: id,
+      });
+      return sucResponse('Product created successfully', newProduct);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }
@@ -38,7 +37,7 @@ export class ProductsService {
 
   async findAll() {
     try {
-      const products = await this.model.findAll({where: {include: true}});
+      const products = await this.model.findAll({ where: { include: true } });
       return sucResponse('success', products);
     } catch (error) {
       return catchError(error);
