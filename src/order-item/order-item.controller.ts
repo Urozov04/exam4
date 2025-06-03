@@ -29,8 +29,8 @@ export class OrderItemController {
   }
 
   @UseGuards(AuthGuard)
-  @Get()
-  async findAll() {
-    return this.orderItemService.getAll();
+  @Get(':id')
+  async findById(@Param('id') id: number) {
+    return this.orderItemService.getById(+id);
   }
 }

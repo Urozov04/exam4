@@ -6,24 +6,33 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { UserDecorator } from 'src/decorators/user.decorator';
 
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
-  @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
-  }
-
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.orderService.findAll();
   }
+
+  @UseGuards(AuthGuard)
+  @Get('my')
+  async myOrders(@UserDecorator() user: any) {
+    return this.orderService.myOrders(user);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('my:id')
+  async myOrderById(@Param('id') id: string, @UserDecorator() user: any) {}
 
   @Get(':id')
   findOne(@Param('id') id: string) {
