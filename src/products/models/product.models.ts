@@ -31,10 +31,10 @@ export class Product extends Model {
   })
   description: string;
 
-  // @Column({
-  //     type: DataType.STRING,
-  // })
-  // picture: string
+  @Column({
+    type: DataType.STRING,
+  })
+  image: string;
 
   @Column({
     type: DataType.INTEGER,
@@ -74,8 +74,8 @@ export class Product extends Model {
   category: Category;
 
   @HasMany(() => OrderItem)
-  orderItem: OrderItem[]
+  orderItem: OrderItem[];
 
   @HasMany(() => Cart)
-  cart: Cart[]
+  cart: Cart[];
 }
