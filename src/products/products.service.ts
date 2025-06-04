@@ -11,12 +11,15 @@ import { Product } from './models/product.models';
 import { sucResponse } from 'src/utils/success-response';
 import { catchError } from 'src/utils/catch-error';
 import { Category } from 'src/categories/models/category.models';
+import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class ProductsService {
-  constructor(@InjectModel(Product) private model: typeof Product) {}
+  constructor(@InjectModel(Product) private model: typeof Product,
+  private readonly fileService:FileService
+) {}
 
-  async create(user: any, createProductDto: CreateProductDto) {
+  async create(user: any, createProductDto: CreateProductDto,file?:Express.Multer.File) {
     try {
       const { id } = user;
       const { name } = createProductDto;
@@ -30,6 +33,10 @@ export class ProductsService {
         name: lower,
         sellerId: id,
       });
+      let image: undefined | string;
+      if (file) {
+        image = await this.fileService.createFile(file);
+      }
       return sucResponse('Product created successfully', newProduct);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -57,9 +64,16 @@ export class ProductsService {
     }
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
+  async update(id: number, updateProductDto: UpdateProductDto,file?:Express.Multer.File) {
     try {
       const productById = await this.model.findByPk(id);
+      let image = productById?.image
+      if (file) {
+        if (image && (await this.fileService.existFile(image))) {
+          await this.fileService.deleteFile(image);
+        }
+        image = await this.fileService.createFile(file);
+      }
       if (!productById) {
         throw new NotFoundException('Not found');
       }
@@ -86,6 +100,9 @@ export class ProductsService {
       const product = await this.model.findByPk(id);
       if (!product) {
         throw new NotFoundException(`Product not found which that id ${id}`);
+      }
+      if (product?.image && (await this.fileService.existFile(product.image))) {
+        await this.fileService.deleteFile(product.image);
       }
       await this.model.destroy({ where: { id } });
       return sucResponse('Product deleted', {});
