@@ -188,6 +188,19 @@ export class UserService implements OnModuleInit {
     }
   }
 
+  async profile(user: any): Promise<object> {
+    try {
+      const { id } = user;
+      const profileInfo = await this.UserModel.findByPk(id);
+      if (!profileInfo) {
+        throw new NotFoundException('User`s info not found');
+      }
+      return sucResponse('Profile info', profileInfo);
+    } catch (error) {
+      return catchError(error);
+    }
+  }
+
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
