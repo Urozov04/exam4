@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -16,18 +18,21 @@ import { UserDecorator } from 'src/decorators/user.decorator';
 import { CheckRoles } from 'src/decorators/role.decorator';
 import { UserRoles } from 'src/constants';
 import { RolesGuard } from 'src/guards/user.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
   @UseGuards(AuthGuard, RolesGuard)
   @CheckRoles(UserRoles.SELLER, UserRoles.SUPER_ADMIN)
+  @UseInterceptors(FileInterceptor('image'))
   @Post()
   async create(
     @UserDecorator() user: any,
     @Body() createProductDto: CreateProductDto,
+    @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.productsService.create(user, createProductDto);
+    return this.productsService.create(user, createProductDto, file);
   }
 
   @Get()
