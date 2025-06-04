@@ -30,10 +30,6 @@ export class OrderController {
     return this.orderService.myOrders(user);
   }
 
-  @UseGuards(AuthGuard)
-  @Get('my:id')
-  async myOrderById(@Param('id') id: string, @UserDecorator() user: any) {}
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.orderService.findById(+id);

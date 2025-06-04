@@ -54,6 +54,8 @@ export class OrderService {
     }
   }
 
+  // async findMyOrderById
+
   async update(id: number, updateOrderDto: UpdateOrderDto) {
     try {
       const order = await this.model.update(updateOrderDto, {
