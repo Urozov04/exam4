@@ -31,10 +31,10 @@ export class Product extends Model {
   })
   description: string;
 
-  // @Column({
-  //     type: DataType.STRING,
-  // })
-  // picture: string
+  @Column({
+    type: DataType.STRING,
+  })
+  image: string
 
   @Column({
     type: DataType.INTEGER,
