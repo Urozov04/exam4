@@ -109,6 +109,8 @@ export class UserService implements OnModuleInit {
     }
   }
 
+  // async confirmLogin(confirmLoginDto);
+
   async createSeller(createSellerDto: CreateSellerDto): Promise<Object> {
     try {
       const { email, phoneNumber, password } = createSellerDto;
@@ -183,6 +185,19 @@ export class UserService implements OnModuleInit {
         throw new NotFoundException('User with this id is not exist');
       }
       return sucResponse('User by id', user);
+    } catch (error) {
+      return catchError(error);
+    }
+  }
+
+  async profile(user: any): Promise<object> {
+    try {
+      const { id } = user;
+      const profileInfo = await this.UserModel.findByPk(id);
+      if (!profileInfo) {
+        throw new NotFoundException('User`s info not found');
+      }
+      return sucResponse('Profile info', profileInfo);
     } catch (error) {
       return catchError(error);
     }

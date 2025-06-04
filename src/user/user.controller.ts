@@ -21,6 +21,7 @@ import { UserRoles } from 'src/constants';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { RolesGuard } from 'src/guards/user.guard';
 import { SelfGuard } from 'src/guards/self.guard';
+import { UserDecorator } from 'src/decorators/user.decorator';
 
 @Controller('user')
 export class UserController {
@@ -58,6 +59,12 @@ export class UserController {
   @Get()
   findAll() {
     return this.userService.findAll();
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  profile(@UserDecorator() user: any) {
+    return this.userService.profile(user);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
