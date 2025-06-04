@@ -15,11 +15,16 @@ import { FileService } from 'src/file/file.service';
 
 @Injectable()
 export class ProductsService {
-  constructor(@InjectModel(Product) private model: typeof Product,
-  private readonly fileService:FileService
-) {}
+  constructor(
+    @InjectModel(Product) private model: typeof Product,
+    private readonly fileService: FileService,
+  ) {}
 
-  async create(user: any, createProductDto: CreateProductDto,file?:Express.Multer.File) {
+  async create(
+    user: any,
+    createProductDto: CreateProductDto,
+    file?: Express.Multer.File,
+  ) {
     try {
       const { id } = user;
       const { name } = createProductDto;
@@ -28,15 +33,17 @@ export class ProductsService {
       if (existProduct) {
         throw new ConflictException('Product already exists');
       }
-      const newProduct = await this.model.create({
-        ...createProductDto,
-        name: lower,
-        sellerId: id,
-      });
       let image: undefined | string;
       if (file) {
         image = await this.fileService.createFile(file);
       }
+      const newProduct = await this.model.create({
+        ...createProductDto,
+        name: lower,
+        sellerId: id,
+        image,
+      });
+
       return sucResponse('Product created successfully', newProduct);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
@@ -64,10 +71,14 @@ export class ProductsService {
     }
   }
 
-  async update(id: number, updateProductDto: UpdateProductDto,file?:Express.Multer.File) {
+  async update(
+    id: number,
+    updateProductDto: UpdateProductDto,
+    file?: Express.Multer.File,
+  ) {
     try {
       const productById = await this.model.findByPk(id);
-      let image = productById?.image
+      let image = productById?.image;
       if (file) {
         if (image && (await this.fileService.existFile(image))) {
           await this.fileService.deleteFile(image);
