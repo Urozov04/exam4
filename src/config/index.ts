@@ -16,4 +16,5 @@ export default {
   ACCESS_TIME: String(process.env.ACCESS_TOKEN_TIME),
   REFRESH_SECRET: String(process.env.REFRESH_TOKEN_SECRET),
   REFRESH_TIME: String(process.env.REFRESH_TOKEN_TIME),
+  BASE_URL:String(process.env.BASE_URL)
 };
