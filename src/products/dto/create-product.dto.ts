@@ -1,9 +1,7 @@
 import {
-  IsDecimal,
   IsNotEmpty,
   IsNumber,
-  IsOptional,
-  IsString,
+  IsString
 } from 'class-validator';
 
 export class CreateProductDto {

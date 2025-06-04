@@ -14,6 +14,7 @@ import { Category } from './categories/models/category.models';
 import { CategoriesModule } from './categories/categories.module';
 import { OrderItem } from './order-item/models/order-item.models';
 import { Cart } from './cart/models/cart.model';
+import { FileService } from './file/file.service';
 
 @Module({
   imports: [
