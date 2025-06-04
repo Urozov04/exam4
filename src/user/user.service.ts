@@ -109,6 +109,8 @@ export class UserService implements OnModuleInit {
     }
   }
 
+  // async confirmLogin(confirmLoginDto);
+
   async createSeller(createSellerDto: CreateSellerDto): Promise<Object> {
     try {
       const { email, phoneNumber, password } = createSellerDto;

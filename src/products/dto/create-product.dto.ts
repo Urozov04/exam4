@@ -18,8 +18,8 @@ export class CreateProductDto {
   @IsString()
   description: string;
 
-  // @IsString()
-  // picture: string;
+  @IsString()
+  image: string;
 
   @IsNotEmpty()
   @IsNumber()
@@ -28,8 +28,4 @@ export class CreateProductDto {
   @IsNumber()
   @IsNotEmpty()
   categoryId: number;
-
-  // @IsOptional()
-  // @IsNumber()
-  // sellerId: number
 }

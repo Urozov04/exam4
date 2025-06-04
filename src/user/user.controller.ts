@@ -62,7 +62,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
-  @Get()
+  @Get('profile')
   profile(@UserDecorator() user: any) {
     return this.userService.profile(user);
   }
