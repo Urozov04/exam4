@@ -16,5 +16,9 @@ export default {
   ACCESS_TIME: String(process.env.ACCESS_TOKEN_TIME),
   REFRESH_SECRET: String(process.env.REFRESH_TOKEN_SECRET),
   REFRESH_TIME: String(process.env.REFRESH_TOKEN_TIME),
-  BASE_URL:String(process.env.BASE_URL)
+  MAIL_HOST: String(process.env.MAIL_HOST),
+  MAIL_PORT: String(process.env.MAIL_PORT),
+  MAIL_USER: String(process.env.MAIL_USER),
+  MAIL_PASS: String(process.env.MAIL_PASS),
+  BASE_URL: String(process.env.BASE_URL),
 };

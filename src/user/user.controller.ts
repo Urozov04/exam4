@@ -22,6 +22,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { RolesGuard } from 'src/guards/user.guard';
 import { SelfGuard } from 'src/guards/self.guard';
 import { UserDecorator } from 'src/decorators/user.decorator';
+import { ConfirmLoginDto } from './dto/confirm-login.dto';
 
 @Controller('user')
 export class UserController {
@@ -47,11 +48,16 @@ export class UserController {
   }
 
   @Post('login')
-  login(
-    @Body() signInDto: SignInDto,
+  login(@Body() signInDto: SignInDto) {
+    return this.userService.signIn(signInDto);
+  }
+
+  @Post('confirm')
+  confirmLogin(
+    @Body() confirmLoginDto: ConfirmLoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return this.userService.signIn(signInDto, res);
+    return this.userService.confirmLogin(confirmLoginDto, res);
   }
 
   @UseGuards(AuthGuard, RolesGuard)
