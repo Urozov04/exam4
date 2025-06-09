@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -22,12 +23,19 @@ import { writeToCookie } from 'src/utils/writeToCookie';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { SignUpDto } from './dto/sign-up.dto';
 import { AuthUser } from 'src/helpers/user.types';
+import { ConfirmLoginDto } from './dto/confirm-login.dto';
+import { otpGenerate } from 'src/helpers/generate-otp';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UserService implements OnModuleInit {
   constructor(
     @InjectModel(User) private UserModel: typeof User,
     private readonly token: TokenService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    private readonly mailService: MailService,
   ) {}
   async onModuleInit(): Promise<void> {
     try {
@@ -75,7 +83,7 @@ export class UserService implements OnModuleInit {
     }
   }
 
-  async signIn(signInDto: SignInDto, res: Response): Promise<Object> {
+  async signIn(signInDto: SignInDto): Promise<Object> {
     try {
       const { email, password } = signInDto;
       const user = await this.UserModel.findOne({ where: { email } });
@@ -91,12 +99,37 @@ export class UserService implements OnModuleInit {
         throw new BadRequestException('Email or password wrong!');
       }
 
+      const otp = otpGenerate();
+      await this.cacheManager.set(email, otp, 1200);
+      await this.mailService.sendOtp(email, otp);
+      return sucResponse('Confirmation code sent to your email', {});
+    } catch (error) {
+      return catchError(error);
+    }
+  }
+
+  async confirmLogin(
+    confirmLoginDto: ConfirmLoginDto,
+    res: Response,
+  ): Promise<Object> {
+    try {
+      const { email, otp } = confirmLoginDto;
+
+      const user = await this.UserModel.findOne({ where: { email } });
+      if (!user) {
+        throw new BadRequestException('Wrong email address');
+      }
+
+      const isTrueOtp = await this.cacheManager.get(email);
+      if (!isTrueOtp || isTrueOtp != otp) {
+        throw new BadRequestException('OTP expired');
+      }
+
+      const { id, role, status } = user.dataValues;
       const payload: AuthUser = {
-        id: user.dataValues.id,
-        name: user.dataValues.fullName,
-        role: user.dataValues.role,
-        status: user.dataValues.status,
-        address: user.dataValues.address,
+        id,
+        role,
+        status,
       };
 
       const accessToken = await this.token.generateAccessToken(payload);
@@ -108,8 +141,6 @@ export class UserService implements OnModuleInit {
       return catchError(error);
     }
   }
-
-  // async confirmLogin(confirmLoginDto);
 
   async createSeller(createSellerDto: CreateSellerDto): Promise<Object> {
     try {
