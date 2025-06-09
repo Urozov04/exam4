@@ -12,6 +12,7 @@ async function bootstrap() {
       whitelist: true,
       forbidNonWhitelisted: true,
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+      transform: true,
     }),
   );
   await app.listen(PORT, '0.0.0.0', () => {
