@@ -1,7 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Product } from "./product.models";
 
-@Table({tableName:'images-of-admin'})
+@Table({tableName:'images-of-product'})
 export class ImagesOfProduct extends Model{
     @Column({
         type:DataType.STRING,

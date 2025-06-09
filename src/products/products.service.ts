@@ -45,11 +45,14 @@ export class ProductsService {
           imageUrl.push(await this.fileService.createFile(file))
         }
         const images=imageUrl.map((image:string)=>{
-          return{
+          const newImage = {
             image_url:image,
             product_id:newProduct.dataValues.id,
           }
+          return newImage
         })
+        console.log(images);
+        
         await this.imageModel.bulkCreate(images,{transaction})
       }
       await transaction.commit()
