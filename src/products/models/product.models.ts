@@ -11,6 +11,7 @@ import { Cart } from 'src/cart/models/cart.model';
 import { Category } from 'src/categories/models/category.models';
 import { OrderItem } from 'src/order-item/models/order-item.models';
 import { User } from 'src/user/model/user.model';
+import { ImagesOfProduct } from './image-of-product.model';
 
 @Table({ tableName: 'products' })
 export class Product extends Model {
@@ -30,11 +31,6 @@ export class Product extends Model {
     type: DataType.STRING,
   })
   description: string;
-
-  @Column({
-    type: DataType.STRING,
-  })
-  image: string;
 
   @Column({
     type: DataType.INTEGER,
@@ -78,4 +74,10 @@ export class Product extends Model {
 
   @HasMany(() => Cart)
   cart: Cart[];
+
+  @HasMany(()=>ImagesOfProduct,{
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
+  images:ImagesOfProduct
 }

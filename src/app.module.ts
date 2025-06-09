@@ -14,7 +14,8 @@ import { Category } from './categories/models/category.models';
 import { CategoriesModule } from './categories/categories.module';
 import { OrderItem } from './order-item/models/order-item.models';
 import { Cart } from './cart/models/cart.model';
-import { FileService } from './file/file.service';
+import { ImagesOfProduct } from './products/models/image-of-product.model';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { FileService } from './file/file.service';
       synchronize: true,
       logging: false,
       autoLoadModels: true,
-      models: [Product, Order, Review, User, Category, OrderItem, Cart],
+      models: [Product, Order, Review, User, Category, OrderItem, Cart, ImagesOfProduct],
     }),
     JwtModule.register({
       global: true,
@@ -38,6 +39,7 @@ import { FileService } from './file/file.service';
     OrderItemModule,
     UserModule,
     CategoriesModule,
+    FileModule
   ],
 })
 export class AppModule {}
