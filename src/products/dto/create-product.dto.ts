@@ -16,8 +16,7 @@ export class CreateProductDto {
   @IsString()
   description: string;
 
-  @IsString()
-  image: string;
+
 
   @IsNotEmpty()
   @IsNumber()
