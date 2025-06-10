@@ -12,4 +12,11 @@ export class MailService {
       text: otp,
     });
   }
+
+  // async sendOrder(data: object) {
+  //   await this.mailService.sendMail({
+  //     to: data.email,
+  //     subject: `You have successfully ordered ${data}`,
+  //   });
+  // }
 }
