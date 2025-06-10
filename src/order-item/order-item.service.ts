@@ -26,7 +26,7 @@ export class OrderItemService {
     @InjectModel(Cart) private cart: typeof Cart,
     @InjectModel(Product) private product: typeof Product,
     private readonly sequelize: Sequelize,
-    private readonly mailService: MailService,
+    // private readonly mailService: MailService,
   ) {}
 
   async create(user: any, data: CreateOrderItemDto): Promise<object> {
