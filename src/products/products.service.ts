@@ -20,57 +20,77 @@ export class ProductsService {
   constructor(
     @InjectModel(Product) private model: typeof Product,
     @InjectModel(ImagesOfProduct) private imageModel: typeof ImagesOfProduct,
-    private readonly sequelize:Sequelize,
-    private readonly fileService:FileService
-) {}
+    private readonly sequelize: Sequelize,
+    private readonly fileService: FileService,
+  ) {}
 
-  async create(user: any, createProductDto: CreateProductDto,files?:Express.Multer.File[]) {
-    const transaction=await this.sequelize.transaction()
+  async create(
+    user: any,
+    createProductDto: CreateProductDto,
+    files?: Express.Multer.File[],
+  ) {
+    const transaction = await this.sequelize.transaction();
     try {
       const { id } = user;
       const { name } = createProductDto;
       const lower = String(name).toLowerCase();
-      const existProduct = await this.model.findOne({ where: { name: lower } ,transaction});
+      const existProduct = await this.model.findOne({
+        where: { name: lower },
+        transaction,
+      });
       if (existProduct) {
         throw new ConflictException('Product already exists');
       }
-      const newProduct = await this.model.create({
-        ...createProductDto,
-        name: lower,
-        sellerId: id,
-      },{transaction});
-      const imageUrl:string[]=[]
-      if(files && files.length>0){
-        for(let file of files){
-          imageUrl.push(await this.fileService.createFile(file))
+      const newProduct = await this.model.create(
+        {
+          ...createProductDto,
+          name: lower,
+          sellerId: id,
+        },
+        { transaction },
+      );
+      const imageUrl: string[] = [];
+      if (files && files.length > 0) {
+        for (let file of files) {
+          imageUrl.push(await this.fileService.createFile(file));
         }
-        const images=imageUrl.map((image:string)=>{
+        const images = imageUrl.map((image: string) => {
           const newImage = {
-            image_url:image,
-            product_id:newProduct.dataValues.id,
-          }
-          return newImage
-        })
+            image_url: image,
+            product_id: newProduct.dataValues.id,
+          };
+          return newImage;
+        });
         console.log(images);
-        
-        await this.imageModel.bulkCreate(images,{transaction})
+
+        await this.imageModel.bulkCreate(images, { transaction });
       }
-      await transaction.commit()
-        const findProduct=await this.model.findOne({
-          where:{name:lower},
-          include:{all:true}
-        })
+      await transaction.commit();
+      const findProduct = await this.model.findOne({
+        where: { name: lower },
+        include: { all: true },
+      });
       return sucResponse('Product created successfully', findProduct);
     } catch (error) {
-      await transaction.rollback()
-      return catchError(error)
+      await transaction.rollback();
+      return catchError(error);
     }
   }
 
   async findAll() {
     try {
       const products = await this.model.findAll({ include: [Category] });
-      return sucResponse('success', products);
+      return sucResponse('All products', products);
+    } catch (error) {
+      return catchError(error);
+    }
+  }
+
+  async myProducts(user: any) {
+    try {
+      const { id } = user;
+      const myProducts = await this.model.findAll({ where: { sellerId: id } });
+      return sucResponse('My products', myProducts);
     } catch (error) {
       return catchError(error);
     }

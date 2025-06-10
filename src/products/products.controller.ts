@@ -31,18 +31,23 @@ export class ProductsController {
   async create(
     @UserDecorator() user: any,
     @Body() createProductDto: CreateProductDto,
-    @UploadedFiles(new ImageValidationPipe())file?:Express.Multer.File[],
+    @UploadedFiles(new ImageValidationPipe()) file?: Express.Multer.File[],
   ) {
-    return this.productsService.create(user, createProductDto,file);
+    return this.productsService.create(user, createProductDto, file);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.productsService.findAll();
   }
 
+  @Get('my-products')
+  async myProducts(@UserDecorator() user: any) {
+    return this.productsService.myProducts(user);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.productsService.findOne(+id);
   }
 
