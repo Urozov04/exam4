@@ -16,6 +16,7 @@ import { Order } from 'src/order/models/order.model';
 import { Cart } from 'src/cart/models/cart.model';
 import { Product } from 'src/products/models/product.models';
 import { User } from 'src/user/model/user.model';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable({ scope: Scope.REQUEST })
 export class OrderItemService {
@@ -25,6 +26,7 @@ export class OrderItemService {
     @InjectModel(Cart) private cart: typeof Cart,
     @InjectModel(Product) private product: typeof Product,
     private readonly sequelize: Sequelize,
+    private readonly mailService: MailService,
   ) {}
 
   async create(user: any, data: CreateOrderItemDto): Promise<object> {
@@ -84,6 +86,7 @@ export class OrderItemService {
       }
       await this.cart.destroy({ where: { userId: String(id) }, transaction });
       await transaction.commit();
+      // await this.mailService.sendOrder(newOrder);
       return sucResponse('Order created successfully', newOrder);
     } catch (error) {
       await transaction.rollback();

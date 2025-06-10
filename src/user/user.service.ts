@@ -90,7 +90,6 @@ export class UserService implements OnModuleInit {
       if (!user) {
         throw new BadRequestException('Email or password wrong!');
       }
-
       const isCorrectPassword = await decrypt(
         password,
         user.dataValues.password,
@@ -100,7 +99,7 @@ export class UserService implements OnModuleInit {
       }
 
       const otp = otpGenerate();
-      await this.cacheManager.set(email, otp, 1200);
+      await this.cacheManager.set(email, otp, 120000);
       await this.mailService.sendOtp(email, otp);
       return sucResponse('Confirmation code sent to your email', {});
     } catch (error) {
@@ -121,6 +120,8 @@ export class UserService implements OnModuleInit {
       }
 
       const isTrueOtp = await this.cacheManager.get(email);
+      console.log(isTrueOtp, otp);
+
       if (!isTrueOtp || isTrueOtp != otp) {
         throw new BadRequestException('OTP expired');
       }

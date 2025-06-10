@@ -16,6 +16,7 @@ import { OrderItem } from './order-item/models/order-item.models';
 import { Cart } from './cart/models/cart.model';
 import { ImagesOfProduct } from './products/models/image-of-product.model';
 import { FileModule } from './file/file.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -29,17 +30,29 @@ import { FileModule } from './file/file.module';
       synchronize: true,
       logging: false,
       autoLoadModels: true,
-      models: [Product, Order, Review, User, Category, OrderItem, Cart, ImagesOfProduct],
+      models: [
+        Product,
+        Order,
+        Review,
+        User,
+        Category,
+        OrderItem,
+        Cart,
+        ImagesOfProduct,
+      ],
     }),
     JwtModule.register({
       global: true,
+    }),
+    CacheModule.register({
+      isGlobal: true,
     }),
     ProductsModule,
     CartModule,
     OrderItemModule,
     UserModule,
     CategoriesModule,
-    FileModule
+    FileModule,
   ],
 })
 export class AppModule {}
